@@ -26,24 +26,26 @@ dishRouter.route('/')
     res.end('Deleting all the dishes!');
 });
 
-dishRouter.route('/dishes/:dishId')
-.all((req, res, params) =>{
-    res.statusCode = 200;
-    res.setHeader('Content', 'text/plain')
-    params();
+dishRouter.route('/:dishId')
+.all((req, res, next) =>{
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    next();
 })
-.get((req, res, params) => {
-    res.end('Dish with id/ does not exist');
+.get((req, res, next) => {
+    res.end('Sending dish with id: ' + req.body.params 
+        + ' to you!');
 })
-.post((req, res, params) => {
-    res.end('Cannot post dish')
+.post((req, res, next) => {
+    res.statusCode = 403;
+    res.end('Cannot post dish ' + req.params.dishId)
 })
 .put((req, res, params) => {
-    res.end('Updating dish with id: ' 
+    res.write('Updating: ' + req.params.dishId + '\n');
+    res.end('Posting dish with id: ' 
         + req.body.name + 'with details: ' + req.body.description)
 })
 .delete((req, res, params) => {
-    res.end('Deleting dishes with id: ' + req.body.name)
+    res.end('Deleting dishes with id: ' + req.params.dishId)
 })
 
 module.exports = dishRouter;
